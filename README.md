@@ -205,6 +205,11 @@ ros2 node list
 
 プルリクエストやイシューの報告を歓迎します。
 
+## 開発者向けドキュメント
+
+### アーキテクチャ解説
+- [warehouse_demo_manager.py アーキテクチャ解説](docs/warehouse_demo_manager_architecture.md) - 制御スクリプトの詳細な構成とアルゴリズム解説
+
 ## 参考資料
 
 - [ROS2 Documentation](https://docs.ros.org/en/humble/)
