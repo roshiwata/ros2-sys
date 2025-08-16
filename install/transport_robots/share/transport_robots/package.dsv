@@ -1,0 +1,8 @@
+source;share/transport_robots/hook/cmake_prefix_path.ps1
+source;share/transport_robots/hook/cmake_prefix_path.dsv
+source;share/transport_robots/hook/cmake_prefix_path.sh
+source;share/transport_robots/local_setup.bash
+source;share/transport_robots/local_setup.dsv
+source;share/transport_robots/local_setup.ps1
+source;share/transport_robots/local_setup.sh
+source;share/transport_robots/local_setup.zsh

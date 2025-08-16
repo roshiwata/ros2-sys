@@ -1,0 +1,4 @@
+source;share/transport_robots/local_setup.bash
+source;share/transport_robots/local_setup.dsv
+source;share/transport_robots/local_setup.sh
+source;share/transport_robots/local_setup.zsh

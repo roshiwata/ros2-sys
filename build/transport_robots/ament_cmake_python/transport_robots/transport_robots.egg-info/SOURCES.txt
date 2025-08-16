@@ -1,0 +1,6 @@
+setup.py
+transport_robots/__init__.py
+transport_robots.egg-info/PKG-INFO
+transport_robots.egg-info/SOURCES.txt
+transport_robots.egg-info/dependency_links.txt
+transport_robots.egg-info/top_level.txt
