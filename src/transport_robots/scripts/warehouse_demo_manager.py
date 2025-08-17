@@ -138,38 +138,38 @@ class WarehouseDemoManager(Node):
         self.demo_waypoints = {
             'robot_1': [
                 (-12.0, -12.0),  # Start position
-                (-6.0, -12.0),   # Move right
-                (-6.0, -6.0),    # Move up
-                (-12.0, -6.0),   # Move left
-                (-12.0, -12.0)   # Return to start
+                # (-6.0, -12.0),   # Move right
+                # (-6.0, -6.0),    # Move up
+                # (-12.0, -6.0),   # Move left
+                # (-12.0, -12.0)   # Return to start
             ],
             'robot_2': [
                 (-12.0, 12.0),   # Start position
-                (-6.0, 12.0),    # Move right
-                (-6.0, 6.0),     # Move down
-                (-12.0, 6.0),    # Move left
-                (-12.0, 12.0)    # Return to start
+                # (-6.0, 12.0),    # Move right
+                # (-6.0, 6.0),     # Move down
+                # (-12.0, 6.0),    # Move left
+                # (-12.0, 12.0)    # Return to start
             ],
             'robot_3': [
                 (12.0, -12.0),   # Start position
-                (6.0, -12.0),    # Move left
-                (6.0, -6.0),     # Move up
-                (12.0, -6.0),    # Move right
-                (12.0, -12.0)    # Return to start
+                # (6.0, -12.0),    # Move left
+                # (6.0, -6.0),     # Move up
+                # (12.0, -6.0),    # Move right
+                # (12.0, -12.0)    # Return to start
             ],
             'robot_4': [
                 (12.0, 12.0),    # Start position
-                (6.0, 12.0),     # Move left
-                (6.0, 6.0),      # Move down
-                (12.0, 6.0),     # Move right
-                (12.0, 12.0)     # Return to start
+                # (6.0, 12.0),     # Move left
+                # (6.0, 6.0),      # Move down
+                # (12.0, 6.0),     # Move right
+                # (12.0, 12.0)     # Return to start
             ],
             'robot_5': [
                 (-6.0, 12.0),    # Start position
-                (6.0, 12.0),     # Move right
-                (6.0, -12.0),    # Move down
-                (-6.0, -12.0),   # Move left
-                (-6.0, 12.0)     # Return to start
+                # (6.0, 12.0),     # Move right
+                # (6.0, -12.0),    # Move down
+                # (-6.0, -12.0),   # Move left
+                # (-6.0, 12.0)     # Return to start
             ]
         }
         
