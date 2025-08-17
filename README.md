@@ -210,6 +210,9 @@ ros2 node list
 ### アーキテクチャ解説
 - [warehouse_demo_manager.py アーキテクチャ解説](docs/warehouse_demo_manager_architecture.md) - 制御スクリプトの詳細な構成とアルゴリズム解説
 
+### パラメータ設定ガイド
+- [障害物回避パラメータ設定ガイド](docs/OBSTACLE_AVOIDANCE_PARAMETERS.md) - LiDAR障害物回避機能のパラメータ詳細説明と調整方法
+
 ## 参考資料
 
 - [ROS2 Documentation](https://docs.ros.org/en/humble/)
