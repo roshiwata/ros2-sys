@@ -14,11 +14,15 @@ class ObstacleAvoidanceController(Node):
         self.robot_name = robot_name
         
         # Parameters
-        self.linear_speed = 0.3
-        self.angular_speed = 0.5
-        self.safe_distance = 0.8  # meters
-        self.warning_distance = 1.5  # meters
-        
+        # self.linear_speed = 0.3
+        # self.angular_speed = 0.5
+        # self.safe_distance = 0.8  # meters
+        # self.warning_distance = 1.5  # meters
+        self.linear_speed = 0.5     # 中程度の速度
+        self.angular_speed = 1.0     # 適度な回転速度
+        self.safe_distance = 1.5     # 長めの安全距離
+        self.warning_distance = 2.5  # 早期検出
+
         # State variables
         self.current_pose = None
         self.target_pose = None
@@ -146,8 +150,9 @@ class ObstacleAvoidanceController(Node):
         if obstacle_detected:
             # Obstacle avoidance behavior
             self.is_avoiding = True
-            cmd.linear.x = 0.1  # Slow down
+            cmd.linear.x = 0.0  # Slow down
             cmd.angular.z = avoidance_direction * self.angular_speed
+            print(f'Avoiding obstacle, turning {"left" if avoidance_direction > 0 else "right"}')
             self.get_logger().info(f'Avoiding obstacle, turning {"left" if avoidance_direction > 0 else "right"}')
         else:
             # Normal navigation towards target

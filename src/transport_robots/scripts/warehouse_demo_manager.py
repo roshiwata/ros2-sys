@@ -30,7 +30,7 @@ class RobotController:
         self.linear_speed = 0.5
         self.angular_speed = 1.0
         self.position_tolerance = 0.3
-        self.angle_tolerance = 0.1
+        self.angle_tolerance = 0.1  # 約5.7度の許容範囲
         
     def odom_callback(self, msg):
         self.current_pose = msg.pose.pose
@@ -66,17 +66,17 @@ class RobotController:
             dx = self.target_pose[0] - self.current_pose.position.x
             dy = self.target_pose[1] - self.current_pose.position.y
             distance = math.sqrt(dx*dx + dy*dy)
-            
+
             if distance < self.position_tolerance:
                 # Reached target
                 self._stop_robot()
                 self.is_moving = False
                 self.node.get_logger().info(f'{self.robot_name}: Reached target!')
                 break
-                
+
             # Calculate target angle
             target_angle = math.atan2(dy, dx)
-            
+
             # Get current orientation
             current_quat = self.current_pose.orientation
             current_angle = math.atan2(
@@ -102,7 +102,12 @@ class RobotController:
                 # Move forward
                 cmd.linear.x = min(self.linear_speed, distance)
                 cmd.angular.z = 0.0
-                
+            # Debug output
+            self.node.get_logger().info(
+                f'{self.robot_name}: distance={distance:.2f}, angle_diff={angle_diff:.2f}, '
+                f'cmd.linear.x={cmd.linear.x:.2f}, cmd.angular.z={cmd.angular.z:.2f}'
+            )
+            
             self.cmd_vel_pub.publish(cmd)
             
             try:
@@ -137,7 +142,7 @@ class WarehouseDemoManager(Node):
         # Demo waypoints for each robot (avoiding obstacles)
         self.demo_waypoints = {
             'robot_1': [
-                (-12.0, -12.0),  # Start position
+                (-12.0, -6.0),  # Start position
                 # (-6.0, -12.0),   # Move right
                 # (-6.0, -6.0),    # Move up
                 # (-12.0, -6.0),   # Move left
