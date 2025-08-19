@@ -94,21 +94,36 @@ class ObstacleAvoidanceController(Node):
     def detect_obstacles(self):
         """Detect obstacles using laser data"""
         if not self.laser_data:
+            self.get_logger().warn('No laser data available')
             return False, 0.0
         
         ranges = np.array(self.laser_data.ranges)
-        # Replace inf values with max range
+        
+        # Replace inf and nan values with max range
         ranges = np.where(np.isinf(ranges), self.laser_data.range_max, ranges)
+        ranges = np.where(np.isnan(ranges), self.laser_data.range_max, ranges)
         
-        # Check front sector (±45 degrees)
+        # LiDAR configuration: 360 samples, -π to π
+        # Front is at angle 0, which corresponds to index 0 (or 360)
+        # Left is at π/2, Right is at -π/2
+        
+        num_samples = len(ranges)
+        
+        # Define front sector indices (±45 degrees around front)
+        # Front is at index 0, so we need indices around 0
+        front_angle_range = math.pi / 4  # 45 degrees
         front_indices = []
-        angle_increment = self.laser_data.angle_increment
-        angle_min = self.laser_data.angle_min
         
-        for i, range_val in enumerate(ranges):
-            angle = angle_min + i * angle_increment
-            if -math.pi/4 <= angle <= math.pi/4:  # Front 90 degrees
-                front_indices.append(i)
+        # Calculate indices for front sector
+        # For 360 samples: each sample covers 2π/360 = π/180 radians
+        angle_per_sample = 2 * math.pi / num_samples
+        front_sample_range = int(front_angle_range / angle_per_sample)
+        
+        # Front sector: indices around 0 (both ends of the array)
+        for i in range(front_sample_range):
+            front_indices.append(i)  # Right side of front
+        for i in range(num_samples - front_sample_range, num_samples):
+            front_indices.append(i)  # Left side of front
         
         if not front_indices:
             return False, 0.0
@@ -116,9 +131,22 @@ class ObstacleAvoidanceController(Node):
         front_ranges = ranges[front_indices]
         min_distance = np.min(front_ranges)
         
+        # Debug output
+        self.get_logger().info(
+            f'Laser data: {num_samples} samples, min_front_distance: {min_distance:.2f}m, '
+            f'safe_distance: {self.safe_distance:.2f}m'
+        )
+        
         # Find the direction with more free space
-        left_ranges = ranges[:len(ranges)//4]  # Left quarter
-        right_ranges = ranges[3*len(ranges)//4:]  # Right quarter
+        # Left sector (π/4 to 3π/4) - indices around num_samples/4 to 3*num_samples/4
+        left_start = num_samples // 8
+        left_end = 3 * num_samples // 8
+        left_ranges = ranges[left_start:left_end]
+        
+        # Right sector (-3π/4 to -π/4) - indices around 5*num_samples/8 to 7*num_samples/8
+        right_start = 5 * num_samples // 8
+        right_end = 7 * num_samples // 8
+        right_ranges = ranges[right_start:right_end]
         
         left_avg = np.mean(left_ranges) if len(left_ranges) > 0 else 0
         right_avg = np.mean(right_ranges) if len(right_ranges) > 0 else 0
@@ -127,6 +155,14 @@ class ObstacleAvoidanceController(Node):
         avoidance_direction = 1.0 if left_avg > right_avg else -1.0
         
         obstacle_detected = min_distance < self.safe_distance
+        
+        if obstacle_detected:
+            self.get_logger().info(
+                f'OBSTACLE DETECTED! Distance: {min_distance:.2f}m, '
+                f'Left avg: {left_avg:.2f}m, Right avg: {right_avg:.2f}m, '
+                f'Turn direction: {"LEFT" if avoidance_direction > 0 else "RIGHT"}'
+            )
+        
         return obstacle_detected, avoidance_direction
 
     def control_loop(self):
