@@ -1,0 +1,7 @@
+{
+  "package_name": "transport_robots",
+  "non_idl_tuples": [
+    "/workspace/src/transport_robots:srv/SetGoal.srv",
+    "/workspace/src/transport_robots:srv/GetPosition.srv"
+  ]
+}

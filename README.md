@@ -213,6 +213,13 @@ ros2 node list
 ### パラメータ設定ガイド
 - [障害物回避パラメータ設定ガイド](docs/OBSTACLE_AVOIDANCE_PARAMETERS.md) - LiDAR障害物回避機能のパラメータ詳細説明と調整方法
 
+### システムアーキテクチャ
+- [ROS2ノードアーキテクチャ解説](docs/ROS2_NODE_ARCHITECTURE.md) - システム内で動作するROS2ノードの詳細構成と役割
+- [ROS2サービス機能ガイド](docs/ROS2_SERVICES_GUIDE.md) - ロボット制御用ROS2サービスの使用方法とAPI仕様
+
+### セットアップ・実行ガイド
+- [完全セットアップ・実行ガイド](docs/COMPLETE_SETUP_GUIDE.md) - Gazebo起動からROS2サービス制御まで完全な手順
+
 ## 参考資料
 
 - [ROS2 Documentation](https://docs.ros.org/en/humble/)

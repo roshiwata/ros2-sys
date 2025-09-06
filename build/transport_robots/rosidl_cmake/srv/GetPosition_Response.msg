@@ -1,0 +1,13 @@
+
+# Response: 位置情報
+bool success        # 成功/失敗
+string message      # 結果メッセージ
+float64 x          # 現在X座標 (m)
+float64 y          # 現在Y座標 (m)
+float64 z          # 現在Z座標 (m)
+float64 roll       # ロール角 (rad)
+float64 pitch      # ピッチ角 (rad)
+float64 yaw        # ヨー角 (rad)
+float64 linear_x   # 線形速度X (m/s)
+float64 linear_y   # 線形速度Y (m/s)
+float64 angular_z  # 角速度Z (rad/s)

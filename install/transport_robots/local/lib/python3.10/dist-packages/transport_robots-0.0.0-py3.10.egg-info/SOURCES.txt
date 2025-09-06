@@ -4,3 +4,6 @@ transport_robots.egg-info/PKG-INFO
 transport_robots.egg-info/SOURCES.txt
 transport_robots.egg-info/dependency_links.txt
 transport_robots.egg-info/top_level.txt
+transport_robots/srv/__init__.py
+transport_robots/srv/_get_position.py
+transport_robots/srv/_set_goal.py
