@@ -56,7 +56,7 @@ class RobotController:
         movement_thread.start()
         
         return True, f"Goal set to ({x:.2f}, {y:.2f})"
-        
+
     def get_position(self):
         """現在の位置情報を取得"""
         if self.current_pose is None:
@@ -164,7 +164,7 @@ class RobotController:
         """ロボットを停止"""
         cmd = Twist()
         self.cmd_vel_pub.publish(cmd)
-        
+
     def stop(self):
         """移動を停止"""
         self.is_moving = False
@@ -214,7 +214,7 @@ class RobotServiceServer(Node):
             )
             response.success = success
             response.message = message
-            
+
             if success:
                 self.get_logger().info(
                     f"Goal set for {robot_name}: ({request.x:.2f}, {request.y:.2f})"

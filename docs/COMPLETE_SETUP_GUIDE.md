@@ -16,6 +16,7 @@ cd /home/tatsu/ros2-sys
 
 ```bash
 docker stop ros2-transport-robots && docker rm ros2-transport-robots
+docker-compose down
 ```
 
 #### 1.2 Dockerコンテナの状態確認
@@ -125,6 +126,7 @@ source /workspace/install/setup.bash
 
 # サービスサーバーを起動
 python3 /workspace/src/transport_robots/scripts/robot_service_server.py
+python3 /workspace/src/transport_robots/scripts/robot_service_server_with_avoidance.py
 ```
 
 **期待される出力**:
@@ -184,7 +186,7 @@ python3 /workspace/src/transport_robots/scripts/robot_client_app.py all
 #### 8.1 robot_1の移動テスト
 ```bash
 # robot_1に目標座標を設定
-python3 /workspace/src/transport_robots/scripts/robot_client_app.py set robot_1 -3.0 -3.0 0.0
+python3 /workspace/src/transport_robots/scripts/robot_client_app.py set robot_1 -0.3 -0.3 0.0
 ```
 
 **期待される出力**:
@@ -520,3 +522,6 @@ ros2 topic pub /robot_1/cmd_vel geometry_msgs/msg/Twist \
 
 **最終更新**: 2025年9月6日  
 **対象環境**: Docker + ROS2 Humble + Gazebo 11
+
+
+ros2 topic pub /robot_2/cmd_vel geometry_msgs/msg/Twist '{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.0}}'
