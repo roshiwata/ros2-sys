@@ -91,6 +91,7 @@
 /workspace/install/transport_robots/share/transport_robots/worlds//warehouse_clean.world
 /workspace/install/transport_robots/share/transport_robots/worlds//warehouse_with_obstacles.world
 /workspace/install/transport_robots/share/transport_robots/worlds//warehouse copy.world
+/workspace/install/transport_robots/share/transport_robots/worlds//warehouse copy 2.world
 /workspace/install/transport_robots/share/ament_index/resource_index/package_run_dependencies/transport_robots
 /workspace/install/transport_robots/share/ament_index/resource_index/parent_prefix_path/transport_robots
 /workspace/install/transport_robots/share/transport_robots/environment/ament_prefix_path.sh

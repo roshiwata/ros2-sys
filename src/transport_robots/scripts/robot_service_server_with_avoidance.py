@@ -216,7 +216,7 @@ class RobotControllerWithAvoidance:
         """LiDARを使用した障害物検知"""
         if not self.laser_data:
             return False, 0.0
-        
+
         ranges = np.array(self.laser_data.ranges)
         # 無限値を最大範囲で置換
         ranges = np.where(np.isinf(ranges), self.laser_data.range_max, ranges)
@@ -247,7 +247,8 @@ class RobotControllerWithAvoidance:
         right_avg = np.mean(right_half)
         
         # より空いている方向を選択
-        avoidance_direction = 1.0 if left_avg > right_avg else -1.0
+        # avoidance_direction = 1.0 if left_avg > right_avg else -1.0
+        avoidance_direction = 1.0
         
         obstacle_detected = min_distance < self.safe_distance
         return obstacle_detected, avoidance_direction
@@ -275,7 +276,7 @@ class RobotControllerWithAvoidance:
         if obstacle_detected:
             # 障害物回避動作
             self.is_avoiding = True
-            cmd.linear.x = 0.1  # 減速
+            cmd.linear.x = 0.0  # 減速
             cmd.angular.z = avoidance_direction * self.angular_speed
             self.node.get_logger().info(
                 f'{self.robot_name}: Avoiding obstacle, turning {"left" if avoidance_direction > 0 else "right"}'
