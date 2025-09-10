@@ -1,0 +1,9 @@
+# Request: 目標座標の設定
+string robot_name    # ロボット名 (robot_1, robot_2, etc.)
+float64 x           # 目標X座標 (m)
+float64 y           # 目標Y座標 (m)
+float64 yaw         # 目標姿勢角 (rad) - オプション
+---
+# Response: 設定結果
+bool success        # 成功/失敗
+string message      # 結果メッセージ
