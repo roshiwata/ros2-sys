@@ -368,9 +368,9 @@ class RobotServiceServerWithAvoidance(Node):
         # ロボットの初期位置（launchファイルと同じ設定）
         self.robot_initial_positions = {
             'robot_1': {'x': -8.0, 'y': -8.0, 'z': 0.1, 'yaw': 0.0},
-            'robot_2': {'x': 8.0, 'y': -8.0, 'z': 0.1, 'yaw': 1.57},
-            'robot_3': {'x': 8.0, 'y': 8.0, 'z': 0.1, 'yaw': 3.14},
-            'robot_4': {'x': -8.0, 'y': 8.0, 'z': 0.1, 'yaw': -1.57},
+            'robot_2': {'x': 8.0, 'y': -8.0, 'z': 0.1, 'yaw': 0.0},
+            'robot_3': {'x': 8.0, 'y': 8.0, 'z': 0.1, 'yaw': 0.0},
+            'robot_4': {'x': -8.0, 'y': 8.0, 'z': 0.1, 'yaw': 0.0},
             'robot_5': {'x': 0.0, 'y': 0.0, 'z': 0.1, 'yaw': 0.0},
         }
         
