@@ -16,15 +16,20 @@ from transport_robots.srv import SetGoal, GetPosition
 
 class RobotControllerWithAvoidance:
     """障害物回避機能付きロボットコントローラー"""
-    def __init__(self, node, robot_name):
+    def __init__(self, node, robot_name, initial_position=None):
         self.node = node
         self.robot_name = robot_name
+        self.initial_position = initial_position  # launchファイルからの初期位置
         self.current_pose = None
         self.current_twist = None
         self.laser_data = None
         self.target_pose = None
         self.is_moving = False
         self.is_avoiding = False
+        
+        # オドメトリ補正用の変数
+        self.odom_offset = None  # 初期オドメトリと初期位置の差分
+        self.first_odom_received = False
 
         # Publishers and subscribers
         self.cmd_vel_pub = node.create_publisher(
@@ -53,10 +58,77 @@ class RobotControllerWithAvoidance:
         # Control timer
         self.control_timer = node.create_timer(0.1, self.control_loop)
         
+        # 初期位置情報をログ出力
+        if self.initial_position:
+            self.node.get_logger().info(
+                f'{self.robot_name}: Initial position set to '
+                f'({self.initial_position["x"]:.2f}, {self.initial_position["y"]:.2f}, '
+                f'yaw={self.initial_position["yaw"]:.2f})'
+            )
+        
     def odom_callback(self, msg):
-        """オドメトリデータのコールバック"""
-        self.current_pose = msg.pose.pose
+        """オドメトリデータのコールバック（初期位置補正付き）"""
         self.current_twist = msg.twist.twist
+        
+        # 初回オドメトリ受信時にオフセットを計算
+        if not self.first_odom_received and self.initial_position:
+            # 初期オドメトリ位置を取得
+            initial_odom_x = msg.pose.pose.position.x
+            initial_odom_y = msg.pose.pose.position.y
+            initial_odom_z = msg.pose.pose.position.z
+            
+            # 初期オドメトリの姿勢を取得
+            initial_odom_orientation = msg.pose.pose.orientation
+            _, _, initial_odom_yaw = self._quaternion_to_euler(
+                initial_odom_orientation.x,
+                initial_odom_orientation.y,
+                initial_odom_orientation.z,
+                initial_odom_orientation.w
+            )
+            
+            # オフセットを計算（初期位置 - 初期オドメトリ）
+            self.odom_offset = {
+                'x': self.initial_position['x'] - initial_odom_x,
+                'y': self.initial_position['y'] - initial_odom_y,
+                'z': self.initial_position['z'] - initial_odom_z,
+                'yaw': self.initial_position['yaw'] - initial_odom_yaw
+            }
+            
+            self.first_odom_received = True
+            self.node.get_logger().info(
+                f'{self.robot_name}: Odometry offset calculated: '
+                f'({self.odom_offset["x"]:.3f}, {self.odom_offset["y"]:.3f}, '
+                f'yaw={self.odom_offset["yaw"]:.3f})'
+            )
+        
+        # オドメトリデータを補正して保存
+        if self.odom_offset:
+            # 補正された位置を計算
+            corrected_pose = type(msg.pose.pose)()
+            corrected_pose.position.x = msg.pose.pose.position.x + self.odom_offset['x']
+            corrected_pose.position.y = msg.pose.pose.position.y + self.odom_offset['y']
+            corrected_pose.position.z = msg.pose.pose.position.z + self.odom_offset['z']
+            
+            # 姿勢の補正（yaw角度のみ）
+            current_orientation = msg.pose.pose.orientation
+            _, _, current_yaw = self._quaternion_to_euler(
+                current_orientation.x,
+                current_orientation.y,
+                current_orientation.z,
+                current_orientation.w
+            )
+            corrected_yaw = current_yaw + self.odom_offset['yaw']
+            
+            # 補正されたyawをクォータニオンに変換
+            corrected_pose.orientation.x = 0.0
+            corrected_pose.orientation.y = 0.0
+            corrected_pose.orientation.z = math.sin(corrected_yaw / 2.0)
+            corrected_pose.orientation.w = math.cos(corrected_yaw / 2.0)
+            
+            self.current_pose = corrected_pose
+        else:
+            # オフセットが未計算の場合は生のオドメトリを使用
+            self.current_pose = msg.pose.pose
         
     def laser_callback(self, msg):
         """LiDARデータのコールバック"""
@@ -75,6 +147,24 @@ class RobotControllerWithAvoidance:
         )
         
         return True, f"Goal set to ({x:.2f}, {y:.2f}) with obstacle avoidance"
+    
+    def set_goal_to_initial_position(self):
+        """初期位置に戻る"""
+        if not self.initial_position:
+            return False, "No initial position data available"
+        
+        return self.set_goal(
+            self.initial_position['x'], 
+            self.initial_position['y'], 
+            self.initial_position['yaw']
+        )
+    
+    def get_initial_position(self):
+        """初期位置情報を取得"""
+        if not self.initial_position:
+            return False, "No initial position data available", {}
+        
+        return True, "Initial position data retrieved", self.initial_position
         
     def get_position(self):
         """現在の位置情報を取得"""
@@ -86,7 +176,7 @@ class RobotControllerWithAvoidance:
         roll, pitch, yaw = self._quaternion_to_euler(
             orientation.x, orientation.y, orientation.z, orientation.w
         )
-        
+
         position_data = {
             'x': self.current_pose.position.x,
             'y': self.current_pose.position.y,
@@ -98,7 +188,7 @@ class RobotControllerWithAvoidance:
             'linear_y': self.current_twist.linear.y if self.current_twist else 0.0,
             'angular_z': self.current_twist.angular.z if self.current_twist else 0.0
         }
-        
+
         return True, "Position data retrieved", position_data
         
     def _quaternion_to_euler(self, x, y, z, w):
@@ -114,7 +204,7 @@ class RobotControllerWithAvoidance:
             pitch = math.copysign(math.pi / 2, sinp)
         else:
             pitch = math.asin(sinp)
-            
+
         # Yaw (z-axis rotation)
         siny_cosp = 2 * (w * z + x * y)
         cosy_cosp = 1 - 2 * (y * y + z * z)
@@ -275,12 +365,24 @@ class RobotServiceServerWithAvoidance(Node):
     def __init__(self):
         super().__init__('robot_service_server_with_avoidance')
         
+        # ロボットの初期位置（launchファイルと同じ設定）
+        self.robot_initial_positions = {
+            'robot_1': {'x': -8.0, 'y': -8.0, 'z': 0.1, 'yaw': 0.0},
+            'robot_2': {'x': 8.0, 'y': -8.0, 'z': 0.1, 'yaw': 1.57},
+            'robot_3': {'x': 8.0, 'y': 8.0, 'z': 0.1, 'yaw': 3.14},
+            'robot_4': {'x': -8.0, 'y': 8.0, 'z': 0.1, 'yaw': -1.57},
+            'robot_5': {'x': 0.0, 'y': 0.0, 'z': 0.1, 'yaw': 0.0},
+        }
+        
         # ロボットコントローラーを初期化
-        self.robot_names = ['robot_1', 'robot_2', 'robot_3', 'robot_4', 'robot_5']
+        self.robot_names = list(self.robot_initial_positions.keys())
         self.robots = {}
         
         for robot_name in self.robot_names:
-            self.robots[robot_name] = RobotControllerWithAvoidance(self, robot_name)
+            initial_pos = self.robot_initial_positions[robot_name]
+            self.robots[robot_name] = RobotControllerWithAvoidance(
+                self, robot_name, initial_pos
+            )
             
         # サービスサーバーを作成
         self.set_goal_service = self.create_service(
@@ -290,9 +392,12 @@ class RobotServiceServerWithAvoidance(Node):
         self.get_position_service = self.create_service(
             GetPosition, 'get_robot_position', self.get_position_callback
         )
-        
+
         self.get_logger().info('Robot Service Server with Obstacle Avoidance initialized')
         self.get_logger().info(f'Available robots: {", ".join(self.robot_names)}')
+        self.get_logger().info('Robot initial positions:')
+        for robot_name, pos in self.robot_initial_positions.items():
+            self.get_logger().info(f'  - {robot_name}: ({pos["x"]:.1f}, {pos["y"]:.1f}, yaw={pos["yaw"]:.2f})')
         self.get_logger().info('Services:')
         self.get_logger().info('  - /set_robot_goal (SetGoal) - with obstacle avoidance')
         self.get_logger().info('  - /get_robot_position (GetPosition)')
@@ -300,6 +405,7 @@ class RobotServiceServerWithAvoidance(Node):
         self.get_logger().info('  - LiDAR-based obstacle detection')
         self.get_logger().info('  - Dynamic obstacle avoidance')
         self.get_logger().info('  - Multi-robot coordination')
+        self.get_logger().info('  - Initial position tracking from launch file')
         
     def set_goal_callback(self, request, response):
         """目標座標設定サービスのコールバック"""
