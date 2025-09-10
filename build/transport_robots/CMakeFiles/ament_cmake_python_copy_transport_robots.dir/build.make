@@ -67,7 +67,7 @@ include CMakeFiles/ament_cmake_python_copy_transport_robots.dir/compiler_depend.
 include CMakeFiles/ament_cmake_python_copy_transport_robots.dir/progress.make
 
 CMakeFiles/ament_cmake_python_copy_transport_robots:
-	/usr/bin/cmake -E copy_directory /workspace/src/transport_robots/transport_robots /workspace/build/transport_robots/ament_cmake_python/transport_robots/transport_robots
+	/usr/bin/cmake -E copy_directory /workspace/build/transport_robots/rosidl_generator_py/transport_robots /workspace/build/transport_robots/ament_cmake_python/transport_robots/transport_robots
 
 ament_cmake_python_copy_transport_robots: CMakeFiles/ament_cmake_python_copy_transport_robots
 ament_cmake_python_copy_transport_robots: CMakeFiles/ament_cmake_python_copy_transport_robots.dir/build.make

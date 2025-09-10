@@ -1,0 +1,63 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from transport_robots/srv/GetPosition.srv
+// generated code does not contain a copyright notice
+
+
+module transport_robots {
+  module srv {
+    @verbatim (language="comment", text=
+      "Request: 位置情報の取得")
+    struct GetPosition_Request {
+      @verbatim (language="comment", text=
+        "ロボット名 (robot_1, robot_2, etc.)")
+      string robot_name;
+    };
+    @verbatim (language="comment", text=
+      "Response: 位置情報")
+    struct GetPosition_Response {
+      @verbatim (language="comment", text=
+        "成功/失敗")
+      boolean success;
+
+      @verbatim (language="comment", text=
+        "結果メッセージ")
+      string message;
+
+      @verbatim (language="comment", text=
+        "現在X座標 (m)")
+      double x;
+
+      @verbatim (language="comment", text=
+        "現在Y座標 (m)")
+      double y;
+
+      @verbatim (language="comment", text=
+        "現在Z座標 (m)")
+      double z;
+
+      @verbatim (language="comment", text=
+        "ロール角 (rad)")
+      double roll;
+
+      @verbatim (language="comment", text=
+        "ピッチ角 (rad)")
+      double pitch;
+
+      @verbatim (language="comment", text=
+        "ヨー角 (rad)")
+      double yaw;
+
+      @verbatim (language="comment", text=
+        "線形速度X (m/s)")
+      double linear_x;
+
+      @verbatim (language="comment", text=
+        "線形速度Y (m/s)")
+      double linear_y;
+
+      @verbatim (language="comment", text=
+        "角速度Z (rad/s)")
+      double angular_z;
+    };
+  };
+};

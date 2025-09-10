@@ -32,9 +32,16 @@
       </geometry>
     </collision>
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="-0.3 0 0" rpy="0 0 0"/>
       <mass value="20.0"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <!-- 正確な慣性テンソルを計算 -->
+      <inertia 
+        ixx="${(1.0/12.0) * 20.0 * (base_width*base_width + base_height*base_height)}" 
+        ixy="0.0" 
+        ixz="0.0" 
+        iyy="${(1.0/12.0) * 20.0 * (base_length*base_length + base_height*base_height)}" 
+        iyz="0.0" 
+        izz="${(1.0/12.0) * 20.0 * (base_length*base_length + base_width*base_width)}"/>
     </inertial>
   </link>
 
@@ -59,7 +66,14 @@
       <inertial>
         <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         <mass value="2.0"/>
-        <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+        <!-- 円柱の慣性テンソル -->
+        <inertia 
+          ixx="${(1.0/12.0) * 2.0 * (3*wheel_radius*wheel_radius + wheel_width*wheel_width)}" 
+          ixy="0.0" 
+          ixz="0.0" 
+          iyy="${(1.0/12.0) * 2.0 * (3*wheel_radius*wheel_radius + wheel_width*wheel_width)}" 
+          iyz="0.0" 
+          izz="${0.5 * 2.0 * wheel_radius*wheel_radius}"/>
       </inertial>
     </link>
 
@@ -127,6 +141,11 @@
       <odometry_topic>odom</odometry_topic>
       <odometry_frame>odom</odometry_frame>
       <robot_base_frame>base_link</robot_base_frame>
+      <!-- 重要: 回転中心を後輪軸に設定 -->
+      <wheel_separation>${base_width}</wheel_separation>
+      <wheel_diameter>${2*wheel_radius}</wheel_diameter>
+      <!-- オドメトリの基準点を調整 -->
+      <odometry_source>world</odometry_source>
     </plugin>
   </gazebo>
 

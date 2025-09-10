@@ -46,9 +46,9 @@ def generate_launch_description():
     # Robot positions
     robot_positions = [
         {'name': 'robot_1', 'x': '-8.0', 'y': '-8.0', 'z': '0.1', 'yaw': '0.0'},
-        {'name': 'robot_2', 'x': '8.0', 'y': '-8.0', 'z': '0.1', 'yaw': '1.57'},
-        {'name': 'robot_3', 'x': '8.0', 'y': '8.0', 'z': '0.1', 'yaw': '3.14'},
-        {'name': 'robot_4', 'x': '-8.0', 'y': '8.0', 'z': '0.1', 'yaw': '-1.57'},
+        {'name': 'robot_2', 'x': '8.0', 'y': '-8.0', 'z': '0.1', 'yaw': '0.0'},
+        {'name': 'robot_3', 'x': '8.0', 'y': '8.0', 'z': '0.1', 'yaw': '0.0'},
+        {'name': 'robot_4', 'x': '-8.0', 'y': '8.0', 'z': '0.1', 'yaw': '0.0'},
         {'name': 'robot_5', 'x': '0.0', 'y': '0.0', 'z': '0.1', 'yaw': '0.0'},
     ]
     

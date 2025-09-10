@@ -1,0 +1,39 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from transport_robots/srv/SetGoal.srv
+// generated code does not contain a copyright notice
+
+
+module transport_robots {
+  module srv {
+    @verbatim (language="comment", text=
+      "Request: 目標座標の設定")
+    struct SetGoal_Request {
+      @verbatim (language="comment", text=
+        "ロボット名 (robot_1, robot_2, etc.)")
+      string robot_name;
+
+      @verbatim (language="comment", text=
+        "目標X座標 (m)")
+      double x;
+
+      @verbatim (language="comment", text=
+        "目標Y座標 (m)")
+      double y;
+
+      @verbatim (language="comment", text=
+        "目標姿勢角 (rad) - オプション")
+      double yaw;
+    };
+    @verbatim (language="comment", text=
+      "Response: 設定結果")
+    struct SetGoal_Response {
+      @verbatim (language="comment", text=
+        "成功/失敗")
+      boolean success;
+
+      @verbatim (language="comment", text=
+        "結果メッセージ")
+      string message;
+    };
+  };
+};

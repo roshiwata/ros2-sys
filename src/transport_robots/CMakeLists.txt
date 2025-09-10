@@ -15,15 +15,22 @@ find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
-# Install Python modules
-ament_python_install_package(${PROJECT_NAME})
+# Generate service interfaces
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/SetGoal.srv"
+  "srv/GetPosition.srv"
+  DEPENDENCIES geometry_msgs std_msgs
+)
 
 # Install Python scripts
 install(PROGRAMS
   scripts/robot_controller.py
   scripts/warehouse_manager.py
   scripts/product_manager.py
+  scripts/robot_service_server.py
+  scripts/robot_client_app.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

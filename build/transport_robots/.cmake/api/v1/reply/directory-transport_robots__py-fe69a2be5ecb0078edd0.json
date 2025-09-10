@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "transport_robots__py",
+		"source" : "/workspace/build/transport_robots/transport_robots__py"
+	}
+}
